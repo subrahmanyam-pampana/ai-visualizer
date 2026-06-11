@@ -1,0 +1,97 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]: AI
+        - generic [ref=e8]: AI Concepts Visualizer
+      - button "Switch to light mode" [ref=e9] [cursor=pointer]:
+        - img [ref=e10]
+    - navigation [ref=e16]:
+      - link "Tokenization" [ref=e17] [cursor=pointer]:
+        - /url: "#/tokenization"
+      - link "RAG" [ref=e18] [cursor=pointer]:
+        - /url: "#/rag"
+      - link "Agent Flows" [ref=e19] [cursor=pointer]:
+        - /url: "#/agent"
+  - main [ref=e20]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - heading "Retrieval-Augmented Generation" [level=1] [ref=e24]
+        - paragraph [ref=e25]: RAG gives LLMs access to external knowledge at inference time — without retraining. It grounds responses in retrieved documents, dramatically reducing hallucination and enabling up-to-date answers. Click Play to walk through every step of the pipeline.
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]:
+              - generic [ref=e30]: Ingestion Pipeline
+              - generic [ref=e31]: step 0 / 9
+            - generic [ref=e32]:
+              - button "Play All" [ref=e33] [cursor=pointer]:
+                - img [ref=e34]
+                - text: Play All
+              - button "Step" [ref=e36] [cursor=pointer]:
+                - img [ref=e37]
+                - text: Step
+              - button "Reset" [ref=e39] [cursor=pointer]:
+                - img [ref=e40]
+                - text: Reset
+          - generic [ref=e43]:
+            - generic [ref=e44]: Query
+            - textbox [ref=e45]: How does attention work in transformers?
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e51]: Data Ingestion
+            - generic [ref=e52]:
+              - generic [ref=e54]:
+                - generic [ref=e55]: 📂
+                - generic [ref=e56]: Load
+                - generic [ref=e57]: Raw documents collected
+              - generic [ref=e61]:
+                - generic [ref=e62]: ✂️
+                - generic [ref=e63]: Chunk
+                - generic [ref=e64]: Split into fixed-size chunks
+              - generic [ref=e68]:
+                - generic [ref=e69]: 🔢
+                - generic [ref=e70]: Embed
+                - generic [ref=e71]: Each chunk → dense vector
+              - generic [ref=e75]:
+                - generic [ref=e76]: 🗄️
+                - generic [ref=e77]: Store
+                - generic [ref=e78]: Vectors saved in vector DB
+          - generic [ref=e82]: used by Retrieve →
+          - generic [ref=e85]:
+            - generic [ref=e88]: Query Pipeline
+            - generic [ref=e89]:
+              - generic [ref=e91]:
+                - generic [ref=e92]: 💬
+                - generic [ref=e93]: Query
+                - generic [ref=e94]: User question received
+              - generic [ref=e98]:
+                - generic [ref=e99]: 🔢
+                - generic [ref=e100]: Embed
+                - generic [ref=e101]: Query encoded to vector
+              - generic [ref=e105]:
+                - generic [ref=e106]: 🔍
+                - generic [ref=e107]: Retrieve
+                - generic [ref=e108]: Similarity search in vector DB
+              - generic [ref=e112]:
+                - generic [ref=e113]: 📄
+                - generic [ref=e114]: Augment
+                - generic [ref=e115]: Chunks injected into prompt
+              - generic [ref=e119]:
+                - generic [ref=e120]: ✨
+                - generic [ref=e121]: Generate
+                - generic [ref=e122]: LLM produces grounded answer
+      - generic [ref=e123]:
+        - heading "Concepts" [level=2] [ref=e124]
+        - button "The Problem RAG Solves" [ref=e126] [cursor=pointer]:
+          - generic [ref=e127]: The Problem RAG Solves
+          - img [ref=e128]
+        - button "What Are Embeddings?" [ref=e131] [cursor=pointer]:
+          - generic [ref=e132]: What Are Embeddings?
+          - img [ref=e133]
+        - button "How Retrieval Works" [ref=e136] [cursor=pointer]:
+          - generic [ref=e137]: How Retrieval Works
+          - img [ref=e138]
+        - button "RAG Limitations & Improvements" [ref=e141] [cursor=pointer]:
+          - generic [ref=e142]: RAG Limitations & Improvements
+          - img [ref=e143]
