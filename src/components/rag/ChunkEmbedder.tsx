@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import {
-  DIMENSIONS,
   DIM_LABELS,
   textEmbed,
   getHighlights,
@@ -48,36 +47,38 @@ const DOC_VECTORS = RAG_DOCUMENTS.map(d => d.embedding)
 const PCA_MODEL = pcaFit(DOC_VECTORS)
 const DOC_PTS = DOC_VECTORS.map(v => pcaProject(v, PCA_MODEL))
 
+// Fixed bounds fitted on the document corpus only — never changes, so docs never jump
+const DOC_BOUNDS = (() => {
+  const xs = DOC_PTS.map(p => p[0])
+  const ys = DOC_PTS.map(p => p[1])
+  const xRange = Math.max(...xs) - Math.min(...xs) || 1
+  const yRange = Math.max(...ys) - Math.min(...ys) || 1
+  const px = xRange * 0.18
+  const py = yRange * 0.18
+  return {
+    xMin: Math.min(...xs) - px,
+    xMax: Math.max(...xs) + px,
+    yMin: Math.min(...ys) - py,
+    yMax: Math.max(...ys) + py,
+  }
+})()
+
 function debounce<T extends (s: string) => void>(fn: T, ms: number): T {
   let t: ReturnType<typeof setTimeout>
   return ((s: string) => { clearTimeout(t); t = setTimeout(() => fn(s), ms) }) as T
 }
 
-function scalePts(
-  allPts: [number, number][],
-): { xMin: number; xMax: number; yMin: number; yMax: number } {
-  const xs = allPts.map(p => p[0])
-  const ys = allPts.map(p => p[1])
-  const pad = 0.08
-  const xRange = Math.max(...xs) - Math.min(...xs) || 1
-  const yRange = Math.max(...ys) - Math.min(...ys) || 1
-  return {
-    xMin: Math.min(...xs) - xRange * pad,
-    xMax: Math.max(...xs) + xRange * pad,
-    yMin: Math.min(...ys) - yRange * pad,
-    yMax: Math.max(...ys) + yRange * pad,
-  }
-}
-
 function toSVG(
   v: [number, number],
-  bounds: ReturnType<typeof scalePts>,
+  bounds: typeof DOC_BOUNDS,
 ): [number, number] {
   const { xMin, xMax, yMin, yMax } = bounds
-  return [
-    PAD + ((v[0] - xMin) / (xMax - xMin)) * (W - 2 * PAD),
-    PAD + ((v[1] - yMin) / (yMax - yMin)) * (H - 2 * PAD),
-  ]
+  // Clamp so the user dot never leaves the plot area
+  const cx = Math.max(PAD + 8, Math.min(W - PAD - 8,
+    PAD + ((v[0] - xMin) / (xMax - xMin)) * (W - 2 * PAD)))
+  const cy = Math.max(PAD + 8, Math.min(H - PAD - 8,
+    PAD + ((v[1] - yMin) / (yMax - yMin)) * (H - 2 * PAD)))
+  return [cx, cy]
 }
 
 export default function ChunkEmbedder() {
@@ -95,13 +96,9 @@ export default function ChunkEmbedder() {
 
   const userPt = useMemo(() => pcaProject(vec, PCA_MODEL), [vec])
 
-  const bounds = useMemo(() => {
-    const all: [number, number][] = [...DOC_PTS, userPt]
-    return scalePts(all)
-  }, [userPt])
-
-  const docSVG = useMemo(() => DOC_PTS.map(p => toSVG(p, bounds)), [bounds])
-  const [ux, uy] = toSVG(userPt, bounds)
+  // Use fixed doc bounds — docs never shift, user dot is clamped inside the plot
+  const docSVG = DOC_PTS.map(p => toSVG(p, DOC_BOUNDS))
+  const [ux, uy] = toSVG(userPt, DOC_BOUNDS)
 
   // Ranked nearest docs
   const ranked = useMemo(() =>
@@ -281,7 +278,7 @@ export default function ChunkEmbedder() {
             </span>
           </div>
 
-          <svg width={W} height={H} className="rounded-lg w-full" style={{ backgroundColor: 'var(--bg-card)', maxWidth: W }}>
+          <svg viewBox={`0 0 ${W} ${H}`} className="rounded-lg w-full" style={{ backgroundColor: 'var(--bg-card)' }}>
             {/* Grid */}
             {[0.25, 0.5, 0.75].map(t => (
               <g key={t}>
